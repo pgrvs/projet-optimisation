@@ -5,14 +5,23 @@ from util import coversAll, isElementary
 
 def solveElementary(M,N,sensors):
 
+    configs = []
+
     for i in range(100):
         config = generateElementary(M,N,sensors)
-
+        
+        normalized = sorted(config)
+        if normalized not in [sorted(c) for c in configs]:
+            configs.append(config)
+        
+    for config in configs :
         print("---------------------------------------------------")
         print(config)
         print("covers all ? : ",coversAll(M,N,sensors,config))
         print("elementary ? : ",isElementary(M,N,sensors,config))
         print("---------------------------------------------------")
+
+    print(len(configs))
 
 def generateElementary(M,N,sensors):
     """génère une config aléatoire élémentaire."""

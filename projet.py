@@ -3,7 +3,9 @@ from tkinter import filedialog, messagebox, scrolledtext
 from typing import Dict, List, Tuple
 import random
 import time
+from elementarySolver import generateConfigs
 import pulp
+from util import coversAll, isElementary
 
 # Lecture des données depuis un fichier texte
 def read_data_file(filepath: str) -> Tuple[int, int, Dict[str, Dict[str, object]]]:
@@ -115,7 +117,16 @@ def display_output(filepath: str, M: int, N: int, sensors: Dict[str, Dict[str, o
         output_text.insert(tk.END, f"{sid} → Zones : [{zones}], Durée : {info['life']}\n")
 
     # Génération des configurations élémentaires
-    configs = generer_configurations_elementaires(M, N, sensors, k=3)
+    # configs = generer_configurations_elementaires(M, N, sensors, k=3) #méthode de Paul
+    configs = generateConfigs(M,N,sensors,100)
+
+    for c in configs :
+        if not coversAll(M,N,sensors,c):
+            raise f"config : ${c} does not cover all"
+
+        if not isElementary(M,N,sensors,c):
+            raise f"config : ${c} is not elementary"
+
     output_text.insert(tk.END, "\nConfigurations élémentaires générées :\n")
     for i, cfg in enumerate(configs, 1):
         output_text.insert(tk.END, f"  {i}. {cfg}\n")

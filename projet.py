@@ -122,10 +122,10 @@ def display_output(filepath: str, M: int, N: int, sensors: Dict[str, Dict[str, o
 
     for c in configs :
         if not coversAll(M,N,sensors,c):
-            raise f"config : ${c} does not cover all"
+            raise f"config : {c} does not cover all"
 
         if not isElementary(M,N,sensors,c):
-            raise f"config : ${c} is not elementary"
+            raise f"config : {c} is not elementary"
 
     output_text.insert(tk.END, "\nConfigurations élémentaires générées :\n")
     for i, cfg in enumerate(configs, 1):
@@ -133,11 +133,17 @@ def display_output(filepath: str, M: int, N: int, sensors: Dict[str, Dict[str, o
 
     solution = resoudre_avec_pulp(M, N, sensors, configs)
     output_text.insert(tk.END, "\nSolution optimale (durée d’activation des configurations) :\n")
-    total = 0
+
+    sortedConfigs = []
+
     for i, val in solution.items():
-        output_text.insert(tk.END, f"  Configuration {i+1} : {val:.2f}\n")
-        total += val
-    output_text.insert(tk.END, f"\nDurée totale de couverture : {total:.2f} unités\n")
+        c = configs[i]
+        sortedConfigs.append({"value":val,"config":c})
+
+    sortedConfigs.sort(key = lambda obj : obj["value"])
+
+    for obj in sortedConfigs:
+        output_text.insert(tk.END, f"  Configuration {obj['config']} : {obj['value']:.2f}\n")
 
     output_text.config(state='disabled')
 

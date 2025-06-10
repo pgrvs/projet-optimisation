@@ -1,12 +1,14 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, END
+from tkinter import ttk
 from typing import Dict, List, Tuple
 import random
 import time
 from configsGenerator import generateConfigs
 
 from reader import read_data_file
-from pulpSolver import solve
+from pulpSolver import solve as solvePulp
+from GLPKSolver import solve as solveGLPK
 from util import coversAll, isElementary
 
 
@@ -103,7 +105,13 @@ def display_output(filepath: str, M: int, N: int, sensors: Dict[str, Dict[str, o
     for i, cfg in enumerate(configs, 1):
         output_text.insert(tk.END, f"  {i}. {cfg}\n")
 
-    result = solve(M,N,sensors,configs)
+    solver = solver_CB.get()
+    if solver == "pulp":
+        print("solving with pulp !")
+        result = solvePulp(M,N,sensors,configs)
+    else :
+        print("solving with GLPK !")
+        result = solveGLPK(M,N,sensors,configs)
 
     output_text.insert(tk.END,f"max time : {result}")
 
@@ -118,6 +126,10 @@ btn.pack(pady=10)
 rounds_input = tk.Entry(root)
 rounds_input.insert(END,"100")
 rounds_input.pack(pady=10)
+
+solver_CB = ttk.Combobox(root)
+solver_CB["values"] = ["pulp","GLPK"]
+solver_CB.pack(pady=10)
 
 output_text = scrolledtext.ScrolledText(root, wrap='word', state='disabled')
 output_text.pack(fill='both', expand=True, padx=10, pady=10)

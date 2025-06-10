@@ -7,7 +7,7 @@ def generateConfigs(M,N,sensors,rounds = 100):
 
     configs = []
 
-    for i in range(100):
+    for i in range(rounds):
         config = generateElementary(M,N,sensors)
         
         normalized = sorted(config)

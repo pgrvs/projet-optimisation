@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog, messagebox, scrolledtext
+from tkinter import filedialog, messagebox, scrolledtext, END
 from typing import Dict, List, Tuple
 import random
 import time
@@ -103,7 +103,10 @@ def display_output(filepath: str, M: int, N: int, sensors: Dict[str, Dict[str, o
 
     # Génération des configurations élémentaires
     # configs = generer_configurations_elementaires(M, N, sensors, k=3) #méthode de Paul
-    configs = generateConfigs(M,N,sensors,100)
+
+    nb_rounds = int(rounds_input.get())
+
+    configs = generateConfigs(M,N,sensors,nb_rounds)
 
     for c in configs :
         if not coversAll(M,N,sensors,c):
@@ -117,7 +120,7 @@ def display_output(filepath: str, M: int, N: int, sensors: Dict[str, Dict[str, o
         output_text.insert(tk.END, f"  {i}. {cfg}\n")
 
     solution = resoudre_avec_pulp(M, N, sensors, configs)
-    output_text.insert(tk.END, "\nSolution optimale (durée d’activation des configurations) :\n")
+    output_text.insert(tk.END, "\nSolutions triées par durée d’activation des configurations :\n")
 
     sortedConfigs = []
 
@@ -139,6 +142,10 @@ root.geometry("500x400")
 
 btn = tk.Button(root, text="Sélectionner un fichier", command=select_file)
 btn.pack(pady=10)
+
+rounds_input = tk.Entry(root)
+rounds_input.insert(END,"100")
+rounds_input.pack(pady=10)
 
 output_text = scrolledtext.ScrolledText(root, wrap='word', state='disabled')
 output_text.pack(fill='both', expand=True, padx=10, pady=10)

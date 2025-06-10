@@ -103,19 +103,9 @@ def display_output(filepath: str, M: int, N: int, sensors: Dict[str, Dict[str, o
     for i, cfg in enumerate(configs, 1):
         output_text.insert(tk.END, f"  {i}. {cfg}\n")
 
-    output_text.insert(tk.END, "\nSolutions triées par durée d’activation des configurations :\n")
+    result = solve(M,N,sensors,configs)
 
-    sortedConfigs = []
-
-    for c in configs:
-        sortedConfigs.append({"value":solve(M,N,sensors,c),"config":c})
-
-    sortedConfigs.sort(key = lambda obj : obj["value"])
-
-    for obj in sortedConfigs:
-        output_text.insert(tk.END, f"  Configuration {obj['config']} : {obj['value']:.2f}\n")
-
-    output_text.config(state='disabled')
+    output_text.insert(tk.END,f"max time : {result}")
 
 # Interface utilisateur principale
 root = tk.Tk()

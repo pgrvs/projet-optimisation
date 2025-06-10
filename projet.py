@@ -80,7 +80,7 @@ def resoudre_avec_pulp(M, N, sensors: Dict[str, Dict[str, object]], configuratio
 def select_file():
     filepath = filedialog.askopenfilename(
         title="Choisir un fichier de données",
-        filetypes=[("Fichiers texte", "*.txt"), ("Tous les fichiers", "*.*")]
+        filetypes=[("Fichiers texte", "*"), ("Tous les fichiers", "*")]
     )
     if not filepath:
         return

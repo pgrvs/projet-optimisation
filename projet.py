@@ -6,7 +6,7 @@ import time
 from configsGenerator import generateConfigs
 
 from reader import read_data_file
-from solver import resoudre_avec_pulp
+from solver import solve
 from util import coversAll, isElementary
 
 
@@ -103,14 +103,12 @@ def display_output(filepath: str, M: int, N: int, sensors: Dict[str, Dict[str, o
     for i, cfg in enumerate(configs, 1):
         output_text.insert(tk.END, f"  {i}. {cfg}\n")
 
-    solution = resoudre_avec_pulp(M, N, sensors, configs)
     output_text.insert(tk.END, "\nSolutions triées par durée d’activation des configurations :\n")
 
     sortedConfigs = []
 
-    for i, val in solution.items():
-        c = configs[i]
-        sortedConfigs.append({"value":val,"config":c})
+    for c in configs:
+        sortedConfigs.append({"value":solve(M,N,sensors,c),"config":c})
 
     sortedConfigs.sort(key = lambda obj : obj["value"])
 

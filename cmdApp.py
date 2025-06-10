@@ -1,6 +1,6 @@
 import sys
 
-from elementarySolver import solveElementary
+from elementarySolver import generateConfigs
 from reader import read_data_file
 
 
@@ -12,6 +12,6 @@ if __name__ == "__main__" :
 
     print("M : ",M,", N : ",N,", sensors : ",sensors)
 
-    solved = solveElementary(M,N,sensors)
+    solved = generateConfigs(M,N,sensors)
 
     print("solved : ",solved)

@@ -3,7 +3,7 @@ from typing import Set
 
 from util import coversAll, isElementary
 
-def solveElementary(M,N,sensors):
+def generateConfigs(M,N,sensors,rounds = 100):
 
     configs = []
 
@@ -22,6 +22,8 @@ def solveElementary(M,N,sensors):
         print("---------------------------------------------------")
 
     print(len(configs))
+
+    return configs
 
 def generateElementary(M,N,sensors):
     """génère une config aléatoire élémentaire."""

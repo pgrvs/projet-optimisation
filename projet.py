@@ -5,25 +5,10 @@ import random
 import time
 from elementarySolver import generateConfigs
 import pulp
+from reader import read_data_file
 from util import coversAll, isElementary
 
-# Lecture des données depuis un fichier texte
-def read_data_file(filepath: str) -> Tuple[int, int, Dict[str, Dict[str, object]]]:
-    sensors: Dict[str, Dict[str, object]] = {}
-    with open(filepath, 'r') as f:
-        N = int(f.readline().strip())
-        M = int(f.readline().strip())
-        durabilities = list(map(float, f.readline().strip().split()))
-        if len(durabilities) != N:
-            raise ValueError(f"{len(durabilities)} durées trouvées, attendu : {N}")
-        for i in range(N):
-            line = f.readline().strip()
-            if not line:
-                raise ValueError(f"Données manquantes pour capteur #{i+1}")
-            zones = line.split()
-            coverage = [f"z{int(z)}" for z in zones]
-            sensors[f"s{i+1}"] = {"coverage": coverage, "life": durabilities[i]}
-    return M, N, sensors
+
 
 # Construction d'une configuration élémentaire (une seule)
 def construire_configuration_elementaire(M: int, sensors: Dict[str, Dict[str, object]], k: int = 2) -> List[str]:

@@ -1,6 +1,6 @@
 import sys
 
-from elementarySolver import generateConfigs
+from configsGenerator import generateConfigs
 from reader import read_data_file
 
 

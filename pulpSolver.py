@@ -17,7 +17,7 @@ def solve(
     Args:
         M: Number of zones (unused but kept for interface)
         N: Number of sensors (unused but kept for interface)
-        sensors: Dictionary mapping sensor IDs to their properties (must include 'lifetime')
+        sensors: Dictionary mapping sensor IDs to their properties (must include 'life')
         configurations: List of valid configurations (each configuration is a list of sensor IDs)
     
     Returns:

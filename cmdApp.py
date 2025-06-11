@@ -1,6 +1,6 @@
 import sys
 
-from configsGenerator import generateConfigs
+from configsGeneratorRandom import generateConfigsRandom
 from reader import read_data_file
 
 
@@ -12,6 +12,6 @@ if __name__ == "__main__" :
 
     print("M : ",M,", N : ",N,", sensors : ",sensors)
 
-    solved = generateConfigs(M,N,sensors)
+    solved = generateConfigsRandom(M,N,sensors)
 
     print("solved : ",solved)

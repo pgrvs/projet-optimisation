@@ -4,7 +4,8 @@ from tkinter import ttk
 from typing import Dict, List, Tuple
 import random
 import time
-from configsGenerator import generateConfigs
+from configsGeneratorRandom import generateConfigsRandom
+from configsGeneratorTabou import generateConfigsTabou
 
 from reader import read_data_file
 from pulpSolver import solve as solvePulp
@@ -91,8 +92,12 @@ def display_output(filepath: str, M: int, N: int, sensors: Dict[str, Dict[str, o
     # configs = generer_configurations_elementaires(M, N, sensors, k=3) #méthode de Paul
 
     nb_rounds = int(rounds_input.get())
+    tabu_size = int(tabu_input.get())
 
-    configs = generateConfigs(M,N,sensors,nb_rounds)
+    if generator_CB.get() == "random" :
+        configs = generateConfigsRandom(M,N,sensors,nb_rounds)
+    else :
+        configs = generateConfigsTabou(M,N,sensors,nb_rounds,tabu_size)
 
     for c in configs :
         if not coversAll(M,N,sensors,c):
@@ -123,10 +128,30 @@ root.geometry("500x400")
 btn = tk.Button(root, text="Sélectionner un fichier", command=select_file)
 btn.pack(pady=10)
 
+generator_label = tk.StringVar()
+generator_label.set("Configs generation algorithm : ")
+tk.Label(root,textvariable=generator_label).pack(pady=5)
+generator_CB = ttk.Combobox(root)
+generator_CB["values"] = ["random","tabou"]
+generator_CB.pack(pady=10)
+
+tabu_label = tk.StringVar()
+tabu_label.set("Tabu size : ")
+tk.Label(root,textvariable=tabu_label).pack(pady=5)
+tabu_input = tk.Entry(root)
+tabu_input.insert(END,"100")
+tabu_input.pack(pady=10)
+
+rounds_label = tk.StringVar()
+rounds_label.set("Nb rounds : ")
+tk.Label(root,textvariable=rounds_label).pack(pady=5)
 rounds_input = tk.Entry(root)
 rounds_input.insert(END,"100")
 rounds_input.pack(pady=10)
 
+generator_label = tk.StringVar()
+generator_label.set("Solver implementation : ")
+tk.Label(root,textvariable=generator_label).pack(pady=5)
 solver_CB = ttk.Combobox(root)
 solver_CB["values"] = ["pulp","GLPK"]
 solver_CB.pack(pady=10)

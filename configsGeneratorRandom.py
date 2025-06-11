@@ -3,7 +3,7 @@ from typing import Set
 
 from util import coversAll, isElementary
 
-def generateConfigs(M,N,sensors,rounds = 100):
+def generateConfigsRandom(M,N,sensors,rounds = 100):
 
     configs = []
 

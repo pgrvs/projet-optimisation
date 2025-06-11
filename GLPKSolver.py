@@ -2,7 +2,7 @@ import subprocess
 from tempfile import NamedTemporaryFile
 from typing import Dict, List, TypedDict
 import os
-
+import re
 class SolutionResult(TypedDict):
     max_time: float
     config_activation_times: List[Dict[str, float]]
@@ -39,8 +39,6 @@ def solve(
         sol_file_path = sol_file.name
     
     try:
-        print(f"glp solving... \n {lp_content}")
-
         # Run GLPK solver
         cmd = [
             'glpsol',
@@ -48,7 +46,6 @@ def solve(
             '--output', sol_file_path
         ]
         subprocess.run(cmd, check=True, capture_output=True)
-        print("thingy done")
         # Parse the solution
         result = _parse_glpk_solution(sol_file_path, configurations)
         
@@ -87,29 +84,29 @@ def _generate_lp_file(sensors: Dict[str, Dict[str, object]],
     return "\n".join(lines)
 
 def _parse_glpk_solution(sol_file_path: str, 
-                        configurations: List[List[str]]) -> SolutionResult:
+                         configurations: List[List[str]]) -> SolutionResult:
     """Parses GLPK solution file."""
     with open(sol_file_path, 'r') as f:
         content = f.read()
-    
-    # Find objective value
-    obj_line = next(line for line in content.split('\n') if line.startswith('Objective:'))
-    max_time = float(obj_line.split('=')[1].split()[0])
-    
-    # Find variable values
+
+    # Extract objective value
+    obj_match = re.search(r'Objective:\s+obj\s+=\s+([-\d.]+)', content)
+    max_time = float(obj_match.group(1)) if obj_match else 0.0
+
+    # Extract activation times
     config_times = []
     for i, config in enumerate(configurations):
         var_name = f"t{i}"
-        var_line = next((line for line in content.split('\n') 
-                        if line.startswith(f"{var_name} ")), None)
-        if var_line:
-            time = float(var_line.split()[3])
-            if time > 1e-6:  # Only include non-zero activations
+        # Match line with variable name and extract activity value (3rd column)
+        match = re.search(rf"\s+\d+\s+{var_name}\s+\w+\s+([-\d.]+)", content)
+        if match:
+            time = float(match.group(1))
+            if time > 1e-6:
                 config_times.append({
                     'config': config,
                     'time': time
                 })
-    
+
     return {
         'max_time': max_time,
         'config_activation_times': config_times

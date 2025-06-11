@@ -113,7 +113,7 @@ def display_output(filepath: str, M: int, N: int, sensors: Dict[str, Dict[str, o
         print("solving with GLPK !")
         result = solveGLPK(M,N,sensors,configs)
 
-    output_text.insert(tk.END,f"max time : {result}")
+    output_text.insert(tk.END,f"resultat : {result}")
 
 # Interface utilisateur principale
 root = tk.Tk()
